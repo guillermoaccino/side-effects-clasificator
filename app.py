@@ -14,11 +14,10 @@ def cargar_modelo():
 datos = cargar_modelo()
 model = datos['modelo']
 dv = datos['vectorizer']
-scaler = datos['scaler']
 le = datos['encoder']
 
 # Título y Descripción de la App
-st.title("💊 Predicción de Efectos Secundarios")
+st.title("Predicción de Efectos Secundarios")
 st.markdown("""
 Esta aplicación utiliza Inteligencia Artificial para predecir posibles efectos adversos 
 en pacientes basándose en su perfil clínico y el tratamiento administrado.
@@ -54,18 +53,13 @@ input_data = obtener_datos_usuario()
 st.subheader("Resumen del Paciente:")
 st.json(input_data)
 
-if st.button("🔍 Predecir Efecto Secundario"):
+if st.button("Predecir Efecto Secundario"):
 
     X_vectorized = dv.transform([input_data])
 
-    X_scaled = scaler.transform(X_vectorized)
-
-    prediction_num = model.predict(X_scaled)
+    prediction_num = model.predict(X_vectorized)
 
     prediction_text = le.inverse_transform(prediction_num)
 
     st.success(f"⚠️ Efecto Secundario Predicho: **{prediction_text[0]}**")
  
-    if hasattr(model, "predict_proba"):
-        prob = model.predict_proba(X_scaled)
-        st.write("Confianza del modelo:", prob.max())
